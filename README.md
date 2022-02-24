@@ -1,4 +1,4 @@
-# multiply_CP
+# cp_multiply
 
 Code to help generate tessellation crease patterns.
 
