@@ -8,8 +8,8 @@ Created on Sat Feb 19 23:38:25 2022
 
 import drawSvg as draw
 
-from cp_utils import convert_named_to_foldAngles
-from cp_utils import reflect, translate, glide_reflect, merge_two_dicts
+from cp_multiply.cp_utils import convert_named_to_foldAngles
+from cp_multiply.cp_utils import reflect, translate, glide_reflect, merge_two_dicts
 
 
 class GeneralCP(object):

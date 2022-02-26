@@ -22,9 +22,11 @@ def reflect(p, line):
     a = (xsq - ysq) / distsq
     b = 2*dx*dy / distsq
     
-    x2 = round(a * (px - x1) + b * (py - y1) + x1)
-    y2 = round(b * (px - x1) - a * (py - y1) + y1)
-
+    #x2 = round(a * (px - x1) + b * (py - y1) + x1)
+    #y2 = round(b * (px - x1) - a * (py - y1) + y1)
+    x2 = a * (px - x1) + b * (py - y1) + x1
+    y2 = b * (px - x1) - a * (py - y1) + y1
+    
     return (x2, y2)
 
 def translate(p, vector):

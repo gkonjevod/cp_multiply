@@ -6,7 +6,7 @@ Created on Sat Feb 19 23:38:25 2022
 @author: goran
 """
 
-from general_cp import GeneralCP
+from cp_multiply.general_cp import GeneralCP
 
 kawasaki_cell_nodes = {'A': (1,1), 
                        'B': (0,2), 
@@ -87,5 +87,3 @@ def generate_kawasaki_nonhydrangea():
     mult3 = mult2.add_reflection(l7).add_reflection(l8)
     mult3.save_cp('kawasaki_nonhydrangea_8x8')
 
-generate_kawasaki_hydrangea()
-generate_kawasaki_nonhydrangea()
