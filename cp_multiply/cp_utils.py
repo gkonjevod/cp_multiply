@@ -6,6 +6,8 @@ Created on Sat Feb 19 23:38:25 2022
 @author: goran
 """
 
+from math import pi, sin, cos
+
 def reflect(p, line):
     q1, q2 = line
     x1, y1 = q1
@@ -51,3 +53,14 @@ def merge_two_dicts(x, y):
     z.update(y)    # modifies z with keys and values of y
     return z
 
+def point_angle_to_line(p, deg):
+    angle = deg * pi / 180
+    return (p, translate(p, (cos(angle), sin(angle))))
+
+
+    
+    
+    
+    
+    
+    
