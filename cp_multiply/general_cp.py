@@ -31,21 +31,28 @@ class GeneralCP(object):
         Otherwise, edges_foldAngle must be given.
         '''
 
+        fold_angle_map = {'V': 180, 'M': -180, 'B': 0, 'F': 0, 'U': 0}
         if namednodes and namededges:
             edges_foldAngle = convert_named_to_foldAngles(namednodes, namededges)
         else:
             assert edges_foldAngle, "Specify either namednodes and namededges, or edges_foldAngle"
         self.edges = list(edges_foldAngle.keys())
         self.nodes = [e[0] for e in self.edges] + [e[1] for e in self.edges]
-        self.edges_foldAngle = edges_foldAngle.copy()
+        self.edges_foldAngle = {}
         self.edges_assignment = {}
         for e in self.edges:
-            if edges_foldAngle[e] > 0:
-                self.edges_assignment[e] = 'V'
-            elif edges_foldAngle[e] < 0:
-                self.edges_assignment[e] = 'M'
+            foldAngle = edges_foldAngle[e]
+            if isinstance(foldAngle, str):
+                self.edges_assignment[e] = foldAngle
+                self.edges_foldAngle[e] = fold_angle_map[foldAngle]
+            elif isinstance(foldAngle, int):
+                self.edges_foldAngle[e] = foldAngle
+                if edges_foldAngle[e] > 0:
+                    self.edges_assignment[e] = 'V'
+                elif edges_foldAngle[e] < 0:
+                    self.edges_assignment[e] = 'M'
             else:
-                self.edges_assignment[e] = 'F'
+                assert 1 == 0, 'Bad input: fold angle'+ str(foldAngle) + ' for edge ' + str(e)
         
     def map_symmetry(self, symmetry_type, data):
         r_nodes = {n: symmetry_type(n, data) for n in self.nodes}
@@ -82,14 +89,15 @@ class GeneralCP(object):
     def make_svg_cp(self, 
                     fold_name = 'some_fold',
                     scale = 20,
-                    stroke_width = 2):
-        maxx = max([n[0] for n in self.nodes])
-        minx = min([n[0] for n in self.nodes])
-        maxy = max([n[1] for n in self.nodes])
-        miny = min([n[1] for n in self.nodes])
-        dx = scale * (maxx - minx)
-        dy = scale * (maxy - miny)
-        d = draw.Drawing(dx, dy, origin = (0,0))
+                    stroke_width = 2,
+                    use_color = True):
+        maxx = scale * max([n[0] for n in self.nodes])
+        minx = scale * min([n[0] for n in self.nodes])
+        maxy = scale * max([n[1] for n in self.nodes])
+        miny = scale * min([n[1] for n in self.nodes])
+        dx = (maxx - minx)
+        dy = (maxy - miny)
+        d = draw.Drawing(dx, dy, origin = (minx, miny))
         
         print('Drawing the crease pattern')
         print('Scale = ', scale)
@@ -97,26 +105,42 @@ class GeneralCP(object):
         for e in edges:
             n1, n2 = e
             fold_angle = self.edges_foldAngle[e]
-            if fold_angle == 0:
-                continue
-            elif fold_angle > 0:
-                color = 'blue'
-            else: # fold_angle < 0
-                color = 'red'
-            opacity = abs(self.edges_foldAngle[e] / 180)
+            color = 'black'
+            opacity = 1
+            stroke_dasharray = ""
+            if fold_angle > 0:
+                if use_color:
+                    color = 'blue'
+                else:
+                    stroke_dasharray = "4 4"
+            elif fold_angle < 0:
+                if use_color:
+                    color = 'red'
+                else:
+                    stroke_dasharray = ""
+            else: # fold_angle == 0
+                if use_color:
+                    color = 'black'
+                else:
+                    stroke_dasharray = ""
+            if fold_angle != 0:
+                opacity = abs(fold_angle / 180)
             n1x, n1y = (e[0][0] * scale, e[0][1] * scale)
             n2x, n2y = (e[1][0] * scale, e[1][1] * scale)
             d.append(draw.Lines(n1x, n1y, n2x, n2y, close = False,
                                 stroke = color, stroke_width = stroke_width,
-                                stroke_opacity = opacity))
+                                stroke_opacity = opacity,
+                                stroke_dasharray = stroke_dasharray))
         return d
 
     def save_cp(self, fold_name = 'some_fold',
                 scale = 20,
-                stroke_width = 2):
+                stroke_width = 2,
+                use_color = True):
         d = self.make_svg_cp(fold_name = fold_name,
                              scale = scale,
-                             stroke_width = stroke_width)
+                             stroke_width = stroke_width,
+                             use_color = use_color)
         filename = fold_name + '.svg'
         d.saveSvg(filename)
         
