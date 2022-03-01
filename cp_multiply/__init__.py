@@ -1,1 +1,1 @@
-__all__ = ['cp_multiply', 'examples']
+__all__ = ['general_cp', 'cp_utils', 'examples']
