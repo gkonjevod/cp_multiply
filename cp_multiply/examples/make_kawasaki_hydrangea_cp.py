@@ -6,7 +6,7 @@ Created on Sat Feb 19 23:38:25 2022
 @author: goran
 """
 
-from cp_multiply.general_cp import GeneralCP
+from ..general_cp import GeneralCP
 
 kawasaki_cell_nodes = {'A': (1,1), 
                        'B': (0,2), 

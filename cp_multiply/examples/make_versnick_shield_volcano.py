@@ -6,7 +6,7 @@ Created on Sat Feb 19 23:38:25 2022
 @author: goran
 """
 
-from cp_multiply.general_cp import GeneralCP
+from ..general_cp import GeneralCP
 
 # Shield Volcano by Paula Versnick, Imagiro 77 (2006)
 
@@ -100,4 +100,3 @@ def generate_volcano(use_color = True):
     full_cp = min_cell.add_reflection(l1).add_reflection(l2).add_reflection(l3)
     full_cp.save_cp('versnick_shield_volcano', use_color = use_color)
     
-generate_volcano(use_color = False)

@@ -1,0 +1,10 @@
+from cp_multiply.examples.make_box_grid_cp import generate_box_grid
+from cp_multiply.examples.make_kawasaki_hydrangea_cp import generate_kawasaki_hydrangea, generate_kawasaki_nonhydrangea
+from cp_multiply.examples.make_versnick_shield_volcano import generate_volcano
+
+generate_box_grid()
+
+generate_kawasaki_hydrangea()
+generate_kawasaki_nonhydrangea()
+
+generate_volcano(use_color = False)

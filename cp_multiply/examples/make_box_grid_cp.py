@@ -6,7 +6,7 @@ Created on Sat Feb 19 23:38:25 2022
 @author: goran
 """
 
-from cp_multiply.general_cp import GeneralCP
+from ..general_cp import GeneralCP
 
 from math import sqrt, pi, tan
 
@@ -37,7 +37,7 @@ def generate_box_grid():
 
     min_cell = GeneralCP(namednodes = box_grid_cell_nodes, 
                          namededges = box_grid_cell_edges)
-    min_cell.save_cp('test0')
+    #min_cell.save_cp('test0')
     c1 = min_cell.add_reflection(l1).add_reflection(l2).add_reflection(l3).add_reflection(l4)
     c1.save_cp('box_grid_cell')
 
