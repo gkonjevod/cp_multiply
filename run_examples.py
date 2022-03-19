@@ -3,6 +3,8 @@ from cp_multiply.examples.make_kawasaki_hydrangea_cp import generate_kawasaki_hy
 from cp_multiply.examples.make_versnick_shield_volcano import generate_volcano
 from cp_multiply.examples.make_box_flower_cp import generate_box_flower_tessellation, generate_box_flower_cp
 from cp_multiply.examples.make_box_packing_cp import generate_box_packing
+from cp_multiply.examples.make_fourstack_cp import generate_fourstack
+
 
 #generate_box_grid()
 #generate_kawasaki_hydrangea()
@@ -13,4 +15,5 @@ from cp_multiply.examples.make_box_packing_cp import generate_box_packing
 #box_flower = generate_box_flower_cp().make_grid((5, 4))
 #box_flower.save_cp('boxflower_tess_5_4')
 
-generate_box_packing()
+#generate_box_packing()
+generate_fourstack()
