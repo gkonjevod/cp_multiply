@@ -8,7 +8,7 @@ Created on Sat Feb 19 23:38:25 2022
 
 import drawSvg as draw
 
-from cp_multiply.cp_utils import convert_named_to_foldAngles
+from cp_multiply.cp_utils import mult, convert_named_to_foldAngles
 from cp_multiply.cp_utils import reflect, translate, glide_reflect, merge_two_dicts
 
 
@@ -45,7 +45,7 @@ class GeneralCP(object):
             if isinstance(foldAngle, str):
                 self.edges_assignment[e] = foldAngle
                 self.edges_foldAngle[e] = fold_angle_map[foldAngle]
-            elif isinstance(foldAngle, int):
+            elif isinstance(foldAngle, int) or isinstance(foldAngle, float):
                 self.edges_foldAngle[e] = foldAngle
                 if edges_foldAngle[e] > 0:
                     self.edges_assignment[e] = 'V'
@@ -53,7 +53,15 @@ class GeneralCP(object):
                     self.edges_assignment[e] = 'M'
             else:
                 assert 1 == 0, 'Bad input: fold angle'+ str(foldAngle) + ' for edge ' + str(e)
-        
+
+        self.maxx = max([n[0] for n in self.nodes])
+        self.minx = min([n[0] for n in self.nodes])
+        self.maxy = max([n[1] for n in self.nodes])
+        self.miny = min([n[1] for n in self.nodes])
+
+    def copy(self):
+        return GeneralCP(edges_foldAngle = self.edges_foldAngle)
+                
     def map_symmetry(self, symmetry_type, data):
         r_nodes = {n: symmetry_type(n, data) for n in self.nodes}
         r_edges = {e: (r_nodes[e[0]], r_nodes[e[1]]) for e in self.edges}
@@ -84,17 +92,33 @@ class GeneralCP(object):
     
     def add_glide_reflection(self, vector_and_line):
         return self.add_symmetry_mapped(glide_reflect, vector_and_line)
+    
+    def make_grid(self, grid_size = (2, 2), overlap_frac = 0):
+        n, m = grid_size
 
+        width = self.maxx - self.minx
+        height = self.maxy - self.miny
+        x_vec = (width * (1 - overlap_frac), 0)
+        y_vec = (0, height * (1 - overlap_frac))
 
+        row = self.copy()
+        for i in range(1, n):
+            row = row.merge(self.translate(mult(i, x_vec)))
+        grid = row.copy()
+        for i in range(1, m):
+            grid = grid.merge(row.translate(mult(i, y_vec)))
+        return grid
+            
+    
     def make_svg_cp(self, 
                     fold_name = 'some_fold',
                     scale = 20,
                     stroke_width = 2,
                     use_color = True):
-        maxx = scale * max([n[0] for n in self.nodes])
-        minx = scale * min([n[0] for n in self.nodes])
-        maxy = scale * max([n[1] for n in self.nodes])
-        miny = scale * min([n[1] for n in self.nodes])
+        maxx = scale * self.maxx
+        minx = scale * self.minx
+        maxy = scale * self.maxy
+        miny = scale * self.miny
         dx = (maxx - minx)
         dy = (maxy - miny)
         d = draw.Drawing(dx, dy, origin = (minx, miny))
