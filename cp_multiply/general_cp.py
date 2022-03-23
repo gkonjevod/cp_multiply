@@ -8,8 +8,9 @@ Created on Sat Feb 19 23:38:25 2022
 
 import drawSvg as draw
 
-from cp_multiply.cp_utils import mult, convert_named_to_foldAngles
+from cp_multiply.cp_utils import mult, convert_named_to_foldAngles, scale_and_shift
 from cp_multiply.cp_utils import reflect, translate, glide_reflect, merge_two_dicts
+
 
 
 class GeneralCP(object):
@@ -58,6 +59,9 @@ class GeneralCP(object):
         self.minx = min([n[0] for n in self.nodes])
         self.maxy = max([n[1] for n in self.nodes])
         self.miny = min([n[1] for n in self.nodes])
+        
+
+
 
     def copy(self):
         return GeneralCP(edges_foldAngle = self.edges_foldAngle)
@@ -77,12 +81,30 @@ class GeneralCP(object):
 
     def glide_reflect(self, vector_and_line):
         return self.map_symmetry(glide_reflect, vector_and_line)
+    
+    def scale(self, alpha):
+        return self.map_symmetry(mult, alpha)
+    
+    def scale_and_shift(self, factor_and_vector):
+        alpha, vector = factor_and_vector
+        #print('In scale_and_shift; factor =', alpha, 'vector =', vector)
+        scaled = self.scale(alpha)
+        return scaled.translate(vector)
 
     def merge(self, other):
         return GeneralCP(edges_foldAngle = merge_two_dicts(self.edges_foldAngle, other.edges_foldAngle))
 
+    def map_by_name(self, map_name, map_params):
+        #print('Trying to get mapping', map_name, 'with params', map_params)
+        mapping = getattr(self, map_name)
+        return mapping(map_params)
+
     def add_symmetry_mapped(self, symmetry_type, data):
         return self.merge(self.map_symmetry(symmetry_type, data))
+
+    def add_mapped_by_name(self, symmetry_type_str, data):
+        mapping = getattr(self, map_name)
+        return self.merge(self.map_symmetry(mapping, data))
 
     def add_reflection(self, line):
         return self.add_symmetry_mapped(reflect, line)
@@ -92,6 +114,9 @@ class GeneralCP(object):
     
     def add_glide_reflection(self, vector_and_line):
         return self.add_symmetry_mapped(glide_reflect, vector_and_line)
+
+    def add_scale_and_shift(self, factor_and_vector):
+        return self.add_symmetry_mapped(scale_and_shift, factor_and_vector)
     
     def make_grid(self, grid_size = (2, 2), overlap_frac = 0):
         n, m = grid_size
@@ -108,8 +133,18 @@ class GeneralCP(object):
         for i in range(1, m):
             grid = grid.merge(row.translate(mult(i, y_vec)))
         return grid
-            
     
+    def add_edges_from_list(self, the_list):
+        for n1, n2, angle in the_list:        
+            self.edges.append((n1, n2))
+            self.edges_foldAngle[(n1, n2)] = angle
+            if angle > 0:
+                self.edges_assignment[(n1, n2)] = 'V'
+            elif angle < 0:
+                self.edges_assignment[(n1, n2)] = 'M'
+            else:
+                self.edges_assignment[(n1, n2)] = 'F'
+                              
     def make_svg_cp(self, 
                     fold_name = 'some_fold',
                     scale = 20,
@@ -167,5 +202,6 @@ class GeneralCP(object):
                              use_color = use_color)
         filename = fold_name + '.svg'
         d.saveSvg(filename)
-        
+            
+
 

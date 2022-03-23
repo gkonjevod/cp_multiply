@@ -8,7 +8,8 @@ Created on Sat Feb 19 23:38:25 2022
 
 from math import pi, sin, cos
 
-def mult(a, vec):
+def mult(vec, a):
+    #print('In mult, a =', a, 'vec =', vec)
     return tuple(a * x for x in vec)
 
 def reflect(p, line):
@@ -41,7 +42,11 @@ def translate(p, vector):
 
 def glide_reflect(p, vector_and_line):
     vector, line = vector_and_line
-    return reflect(translace(p, vector), line)
+    return reflect(translate(p, vector), line)
+
+def scale_and_shift(p, factor_and_vector):
+    factor, vector = factor_and_vector
+    return translate(mult(p, factor), vector)
                
 def convert_named_to_foldAngles(namednodes, namededges):
     edges_foldAngle = {}
@@ -86,7 +91,6 @@ def unit(v, eps = 1e-6):
 
 def normal(f):
     return unit(cross(vdir(f[0], f[1]), vdir(f[1], f[2])))
-
 
 def cross(v1, v2):
     return np.array((v1[1]*v2[2] - v1[2]*v2[1], 
