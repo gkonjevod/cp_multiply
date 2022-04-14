@@ -10,6 +10,7 @@ import drawSvg as draw
 
 from cp_multiply.cp_utils import mult, convert_named_to_foldAngles, scale_and_shift
 from cp_multiply.cp_utils import reflect, translate, glide_reflect, merge_two_dicts
+from cp_multiply.cp_utils import rotate
 
 
 
@@ -61,8 +62,6 @@ class GeneralCP(object):
         self.miny = min([n[1] for n in self.nodes])
         
 
-
-
     def copy(self):
         return GeneralCP(edges_foldAngle = self.edges_foldAngle)
                 
@@ -91,6 +90,9 @@ class GeneralCP(object):
         scaled = self.scale(alpha)
         return scaled.translate(vector)
 
+    def rotate(self, center_and_angle):
+        return self.map_symmetry(center_and_angle)
+
     def merge(self, other):
         return GeneralCP(edges_foldAngle = merge_two_dicts(self.edges_foldAngle, other.edges_foldAngle))
 
@@ -117,6 +119,9 @@ class GeneralCP(object):
 
     def add_scale_and_shift(self, factor_and_vector):
         return self.add_symmetry_mapped(scale_and_shift, factor_and_vector)
+    
+    def add_rotation(self, center_and_angle):
+        return self.add_symmetry_mapped(rotate, center_and_angle)
     
     def make_grid(self, grid_size = (2, 2), overlap_frac = 0):
         n, m = grid_size

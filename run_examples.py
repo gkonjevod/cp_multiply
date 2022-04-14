@@ -6,6 +6,7 @@ from cp_multiply.examples.make_box_flower_cp import generate_box_flower_tessella
 #from cp_multiply.examples.make_fourstack_cp import generate_fourstack
 #from cp_multiply.examples.make_cube_tessellation_siggy_cp import generate_cube_stairs
 from cp_multiply.examples.make_helena_verill_fractal_cp import generate_verill_fractal
+from cp_multiply.examples.make_square_hex_cp import generate_square_hex
 
 
 #generate_box_grid()
@@ -21,4 +22,6 @@ from cp_multiply.examples.make_helena_verill_fractal_cp import generate_verill_f
 #generate_fourstack()
 #generate_cube_stairs()
 
-generate_verill_fractal()
+#generate_verill_fractal()
+
+generate_square_hex()

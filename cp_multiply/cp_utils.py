@@ -6,12 +6,13 @@ Created on Sat Feb 19 23:38:25 2022
 @author: goran
 """
 
-from math import pi, sin, cos
+from math import pi, sin, cos, radians
 
 def mult(vec, a):
     #print('In mult, a =', a, 'vec =', vec)
     return tuple(a * x for x in vec)
 
+    
 def reflect(p, line):
     q1, q2 = line
     x1, y1 = q1
@@ -47,7 +48,19 @@ def glide_reflect(p, vector_and_line):
 def scale_and_shift(p, factor_and_vector):
     factor, vector = factor_and_vector
     return translate(mult(p, factor), vector)
-               
+
+def rotate(p, center_and_angle):
+    center, angle = center_and_angle
+    rads = radians(angle)
+    
+    ox, oy = center
+    px, py = p
+
+    qx = ox + cos(rads) * (px - ox) - sin(rads) * (py - oy)
+    qy = oy + sin(rads) * (px - ox) + cos(rads) * (py - oy)         
+    return (qx, qy)
+
+
 def convert_named_to_foldAngles(namednodes, namededges):
     edges_foldAngle = {}
     for e_str in namededges:
@@ -67,6 +80,11 @@ def point_angle_to_line(p, deg):
 
 def to_degrees(angle):
     return 180*angle/pi
+
+
+def unit_dir(angle):
+    rads = radians(angle)
+    return (cos(rads), sin(rads))
 
 # from fold_geometry
 
