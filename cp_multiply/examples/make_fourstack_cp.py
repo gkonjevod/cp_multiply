@@ -60,10 +60,10 @@ folded_slanted_coords = [(1, 2, 2),
 
 angle1_check = to_degrees(dihedral_angle(normal(folded_top_coords), 
                                          normal(folded_slanted_coords)))
-print('angle1 = ', angle1)
+#print('angle1 = ', angle1)
 angle2 = to_degrees(dihedral_angle(normal(folded_wall_coords), 
                                    normal(folded_slanted_coords)))
-print('angle2 = ', angle2)
+#print('angle2 = ', angle2)
 
 fourstack_edges = {'AB': 0,
                    'AD': -180, 
