@@ -6,7 +6,7 @@ Created on Sat Feb 19 23:38:25 2022
 @author: goran
 """
 
-import drawSvg as draw
+import drawsvg as draw
 
 from cp_multiply.cp_utils import mult, convert_named_to_foldAngles, scale_and_shift
 from cp_multiply.cp_utils import reflect, translate, glide_reflect, merge_two_dicts
@@ -91,22 +91,21 @@ class GeneralCP(object):
         return scaled.translate(vector)
 
     def rotate(self, center_and_angle):
-        return self.map_symmetry(center_and_angle)
+        return self.map_symmetry(rotate, center_and_angle)
 
     def merge(self, other):
         return GeneralCP(edges_foldAngle = merge_two_dicts(self.edges_foldAngle, other.edges_foldAngle))
 
-    def map_by_name(self, map_name, map_params):
-        #print('Trying to get mapping', map_name, 'with params', map_params)
+    def map_by_name(self, map_name, data):
         mapping = getattr(self, map_name)
-        return mapping(map_params)
+        return mapping(data)
 
     def add_symmetry_mapped(self, symmetry_type, data):
         return self.merge(self.map_symmetry(symmetry_type, data))
 
-    def add_mapped_by_name(self, symmetry_type_str, data):
+    def add_mapped_by_name(self, map_name, data):
         mapping = getattr(self, map_name)
-        return self.merge(self.map_symmetry(mapping, data))
+        return self.merge(mapping(data))
 
     def add_reflection(self, line):
         return self.add_symmetry_mapped(reflect, line)
@@ -133,10 +132,10 @@ class GeneralCP(object):
 
         row = self.copy()
         for i in range(1, n):
-            row = row.merge(self.translate(mult(i, x_vec)))
+            row = row.merge(self.translate(mult(x_vec, i)))
         grid = row.copy()
         for i in range(1, m):
-            grid = grid.merge(row.translate(mult(i, y_vec)))
+            grid = grid.merge(row.translate(mult(y_vec, i)))
         return grid
     
     def add_edges_from_list(self, the_list):
@@ -206,7 +205,7 @@ class GeneralCP(object):
                              stroke_width = stroke_width,
                              use_color = use_color)
         filename = fold_name + '.svg'
-        d.saveSvg(filename)
+        d.save_svg(filename)
             
 
 
