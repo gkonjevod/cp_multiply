@@ -9,3 +9,8 @@ The output is an SVG file whose lines encode the creases, with color values defi
 Examples are in cp_multiply.examples, and some of them can be run using the top-level run_examples script. 
 
 TODO: lots (more examples; non-isometric mappings for recursive-style patterns; non-square grid examples and utilities, ...)
+
+Requirements: 
+python >=3.9.7 (probably some earlier versions also work; but not tested)
+drawsvg
+
